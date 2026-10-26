@@ -17,12 +17,12 @@ Get AI Fluency Insights running on your machine in under two minutes.
 ## 1. Get the code
 
 ```
-git clone <this-repo-url>
-cd ai-fluency-insights
+git clone https://github.com/chandan12ar/dev-token-dashboard-multi-ai.git
+cd dev-token-dashboard-multi-ai
 ```
 
-(or just download `ai_fluency_insights.py` and `chart.umd.min.js` into a
-folder — those two files are the entire app.)
+(or just download `ai_fluency_insights.py`, `copilot_source.py` and `chart.umd.min.js`
+into one folder — those three files are the entire app.)
 
 ## 2. Run it
 

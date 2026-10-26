@@ -27,8 +27,8 @@ Estimated. And it needs no Node/npm: just Python, which you already have.
 ## Quick start
 
 ```
-git clone https://github.com/chandan12ar/ai-fluency-insights.git
-cd ai-fluency-insights
+git clone https://github.com/chandan12ar/dev-token-dashboard-multi-ai.git
+cd dev-token-dashboard-multi-ai
 python ai_fluency_insights.py
 ```
 
