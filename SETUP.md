@@ -30,13 +30,20 @@ into one folder — those three files are the entire app.)
 python ai_fluency_insights.py
 ```
 
-That's it. Your browser opens http://localhost:8787 with your stats. The
+That's it. Your browser opens http://localhost:8788 with your stats. The
 page auto-refreshes every 15 seconds, and the parser re-reads only log
 files that changed, so it stays fast even with months of history.
 
 The dashboard is 100% local: it binds to `127.0.0.1` only, makes zero
 external requests (Chart.js is bundled), and never calls any API — it
 costs **zero tokens** to run.
+
+**Running it next to the original Claude-only dashboard** (dev-token-dashboard) is fine.
+That one keeps http://localhost:8787 and this one uses 8788. Each has its own logon task
+(`AIFluencyInsights` vs `AIFluencyInsightsMultiAI`), and while the original is running
+this one leaves the Claude Code pop-up notifications to it, so you get each one once.
+This copy's `Restart-Insights.bat` stops only this copy. The original's restart script
+matches by file name, so it stops this copy too; start it again afterwards.
 
 ### Where it finds your logs
 
@@ -101,7 +108,7 @@ console-less Python), with the script path as argument. In PowerShell:
 ```powershell
 $pyw = (Get-Command pythonw.exe).Source
 $ws = New-Object -ComObject WScript.Shell
-$lnk = $ws.CreateShortcut("$([Environment]::GetFolderPath('Startup'))\AI Fluency Insights.lnk")
+$lnk = $ws.CreateShortcut("$([Environment]::GetFolderPath('Startup'))\AI Fluency Insights Multi-AI.lnk")
 $lnk.TargetPath = $pyw
 $lnk.Arguments = '"C:\full\path\to\ai_fluency_insights.py" --no-browser'
 $lnk.Save()
@@ -122,9 +129,9 @@ crontab -e
 ### Linux (systemd)
 
 ```
-# ~/.config/systemd/user/ai-fluency-insights.service
+# ~/.config/systemd/user/ai-fluency-insights-multi-ai.service
 [Unit]
-Description=AI Fluency Insights
+Description=AI Fluency Insights (multi-AI)
 
 [Service]
 ExecStart=/usr/bin/python3 /full/path/to/ai_fluency_insights.py --no-browser
@@ -134,7 +141,7 @@ WantedBy=default.target
 ```
 
 ```
-systemctl --user enable --now ai-fluency-insights
+systemctl --user enable --now ai-fluency-insights-multi-ai
 ```
 
 ## 3b. Optional: accurate plan-usage numbers and toast notifications
@@ -243,7 +250,7 @@ only when you press the button — everything else is free forever.
 | Symptom | Fix |
 |---|---|
 | `Log directory not found` | You haven't used Claude Code on this machine yet, or logs are elsewhere — pass `--dir` explicitly. |
-| Port already in use | Another instance is running (check http://localhost:8787), or pass `--port 9000`. |
+| `Port 8788 is already in use` | This dashboard is already running: open http://localhost:8788. Or pass another port, e.g. `--port 8789`. |
 | Page loads but charts are empty | Hard-refresh (`Ctrl+F5`); if you deleted `chart.umd.min.js` the page falls back to the CDN and needs internet once. |
 | Task Scheduler install fails | Run the terminal as Administrator, or use the Startup-folder method (option B). |
 | A new tab says "Not enough data yet" | Flow needs 5 timed turns and Quality needs 3 sessions where Claude edited files, within the selected date range. Widen the range (30d or 90d). My Adoption needs 3 active days in the last 4 weeks. |

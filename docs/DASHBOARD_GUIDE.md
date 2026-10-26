@@ -41,7 +41,7 @@ For the code architecture, see [HOW_IT_WORKS.md](HOW_IT_WORKS.md).
   The web page — Chart.js renders it; auto-refreshes every 15 seconds
 ```
 
-One Python file, standard library only, served at `http://localhost:8787`,
+One Python file, standard library only, served at `http://localhost:8788`,
 bound to your machine only (`127.0.0.1`). The page makes zero external
 requests — even Chart.js is bundled locally.
 

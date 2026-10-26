@@ -1,7 +1,7 @@
 # Restart AI Fluency Insights on a fresh process so it reloads the latest
 # code, then open it in your browser. Invoked by Restart-Insights.bat.
 $ErrorActionPreference = 'SilentlyContinue'
-$port   = 8787
+$port   = 8788   # the original Claude-only dashboard keeps 8787
 $script = Join-Path $PSScriptRoot 'ai_fluency_insights.py'
 
 Write-Host ''
@@ -14,13 +14,13 @@ if (-not (Test-Path $script)) {
     exit 1
 }
 
-# 1) Stop every running copy - matched by command line AND by the port, so no
-#    stale duplicates survive (Python's socket reuse lets several share a port).
-#    Also matches the pre-rename dev_token_dashboard.py so an old copy is stopped too.
+# 1) Stop this copy only - matched by this script's full path AND by the port.
+#    The original Claude-only dashboard runs a file with the same name from another
+#    folder (on port 8787), so a name match alone would stop it too.
 Write-Host '  Stopping running instances...'
 $killed = 0
 Get-CimInstance Win32_Process |
-    Where-Object { $_.Name -match '^pythonw?[\d.]*\.exe$' -and ($_.CommandLine -like '*ai_fluency_insights*' -or $_.CommandLine -like '*dev_token_dashboard*') } |
+    Where-Object { $_.Name -match '^pythonw?[\d.]*\.exe$' -and $_.CommandLine -and $_.CommandLine.ToLower().Contains($script.ToLower()) } |
     ForEach-Object { if (Stop-Process -Id $_.ProcessId -Force -PassThru) { $killed++ } }
 foreach ($procId in ((Get-NetTCPConnection -LocalPort $port -State Listen).OwningProcess | Select-Object -Unique)) {
     if (Stop-Process -Id $procId -Force -PassThru) { $killed++ }

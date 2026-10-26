@@ -63,7 +63,7 @@ temporary copy).
    - *Tool calls*: tool usage counts, and lines of code written via
      Write/Edit/MultiEdit/NotebookEdit (counted from the actual content, so
      it's additions, not a git diff).
-3. **Web server** — a stdlib `ThreadingHTTPServer` on `http://localhost:8787`
+3. **Web server** — a stdlib `ThreadingHTTPServer` on `http://localhost:8788`
    serving a single-page dashboard. The page fetches `/api/stats` and
    re-renders every 15 seconds.
 
@@ -193,7 +193,7 @@ every metric's confidence badge, formula and limitation.
 ## Running it
 
 ```
-python ai_fluency_insights.py               # serves http://localhost:8787
+python ai_fluency_insights.py               # serves http://localhost:8788
 python ai_fluency_insights.py --port 9000   # different port
 python ai_fluency_insights.py --dir <path>  # custom Claude logs location
 python ai_fluency_insights.py --dump        # print raw stats JSON and exit
@@ -203,14 +203,15 @@ python ai_fluency_insights.py --no-copilot              # ignore Copilot logs
 python ai_fluency_insights.py --setup-copilot           # turn on exact Copilot token logging (asks first)
 ```
 
-On Windows, after editing the script, `Restart-Insights.bat` stops every
-running copy (matched by command line *and* by whoever owns port 8787) and
-relaunches one fresh windowless instance, then opens the browser.
+On Windows, after editing the script, `Restart-Insights.bat` stops this copy
+(matched by the script's full path *and* by whoever owns port 8788, never the
+original Claude-only dashboard on 8787) and relaunches one fresh windowless
+instance, then opens the browser.
 
 ## Auto-start at logon
 
 The dashboard can start automatically when you log in, so
-http://localhost:8787 is always available. On Windows use either the
+http://localhost:8788 is always available. On Windows use either the
 built-in `--install-startup` flag (Task Scheduler, needs an Administrator
 terminal) or a Startup-folder shortcut pointing at `pythonw.exe` (no admin
 needed). macOS and Linux equivalents (cron / systemd) are covered in

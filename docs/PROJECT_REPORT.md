@@ -39,7 +39,7 @@ how much, how well, and what to try next.**
   usage, cost, habits, quality and history in a single dashboard with one date
   range and one set of definitions ([section 2](#2-the-problem)).
 - **Zero setup cost.** `python ai_fluency_insights.py` and open
-  `http://localhost:8787`. No installs, no accounts, no admin rights.
+  `http://localhost:8788`. No installs, no accounts, no admin rights.
 - **Built for the developer first.** It compares a person only with their own
   past. It never ranks people against each other.
 - **Honest about its numbers.** Every metric on the newer pages carries a
@@ -308,7 +308,7 @@ later team-level view (see [section 11](#11-roadmap-how-this-can-grow)).
    /api/stats   one JSON payload, rebuilt on demand
             │
             ▼
-   Browser page on localhost:8787   charts bundled locally, refreshes every 15 s
+   Browser page on localhost:8788   charts bundled locally, refreshes every 15 s
 ```
 
 - **Source:** only the session log files Claude Code writes itself.

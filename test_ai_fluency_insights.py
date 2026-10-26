@@ -1719,5 +1719,95 @@ class AdvisorTests(_LogFixture):
         self.assertTrue(any("check the work" in w for w in adv["wins"]))
 
 
+
+class SideBySideWithOriginalTests(unittest.TestCase):
+    """This multi-AI copy must run next to the original Claude-only dashboard on one laptop."""
+
+    def _serve(self, body):
+        """A throwaway localhost server answering every GET with `body`; returns (server, port)."""
+        import threading
+        from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+
+        class H(BaseHTTPRequestHandler):
+            def do_GET(self):
+                data = body.encode("utf-8")
+                self.send_response(200)
+                self.send_header("Content-Type", "text/html")
+                self.send_header("Content-Length", str(len(data)))
+                self.end_headers()
+                self.wfile.write(data)
+
+            def log_message(self, *a):
+                pass
+
+        srv = ThreadingHTTPServer(("127.0.0.1", 0), H)
+        threading.Thread(target=srv.serve_forever, daemon=True).start()
+        self.addCleanup(srv.server_close)
+        self.addCleanup(srv.shutdown)
+        return srv, srv.server_address[1]
+
+    def test_ports_and_task_name_differ_from_the_original(self):
+        self.assertEqual((afi.DEFAULT_PORT, afi.ORIGINAL_DASHBOARD_PORT), (8788, 8787))
+        self.assertNotIn(afi.STARTUP_TASK, ("AIFluencyInsights", "DevTokenDashboard"))
+
+    def test_a_port_another_server_listens_on_is_refused(self):
+        # The original dashboard uses Python's default server, which allows address reuse.
+        _, port = self._serve("<title>AI Fluency Insights</title>")
+        with self.assertRaises(OSError):
+            afi.DashboardServer(("127.0.0.1", port), afi.Handler)
+
+    def test_the_original_dashboard_is_recognised_by_its_page(self):
+        _, port = self._serve("<!doctype html><html><head><meta charset=utf-8>"
+                              "<title>AI Fluency Insights</title></head><body>" + "x" * 50000)
+        self.assertTrue(afi.original_dashboard_running(port))
+        _, other = self._serve("<title>Something else</title>")
+        self.assertFalse(afi.original_dashboard_running(other))
+
+    def test_nothing_listening_means_not_running(self):
+        import socket
+        s = socket.socket()
+        s.bind(("127.0.0.1", 0))
+        port = s.getsockname()[1]
+        s.close()
+        self.assertFalse(afi.original_dashboard_running(port, timeout=0.5))
+
+    @patch.object(afi, "send_windows_toast")
+    def test_a_muted_watcher_shows_no_toast(self, mock_toast):
+        with tempfile.TemporaryDirectory() as root:
+            watcher = afi.NotificationWatcher(afi.Scanner(root),
+                                              state_path=os.path.join(root, "state.json"))
+            watcher.muted = True
+            watcher._toast("t", "m")
+            mock_toast.assert_not_called()
+            watcher.muted = False
+            watcher._toast("t", "m")
+            mock_toast.assert_called_once_with("t", "m")
+
+    @unittest.skipUnless(os.name == "nt", "the logon task is Windows-only")
+    def test_install_and_uninstall_touch_only_this_copys_task(self):
+        for flag in ("--install-startup", "--uninstall-startup"):
+            with patch("subprocess.run") as run, patch("sys.argv", ["afi", flag]),                     patch("builtins.print"):
+                run.return_value.returncode = 0
+                afi.main()
+            names = [c.args[0][c.args[0].index("/TN") + 1] for c in run.call_args_list]
+            self.assertEqual(names, [afi.STARTUP_TASK], flag)
+
+    def test_a_busy_port_stops_with_a_clear_message(self):
+        before = {k: vars(afi.Handler)[k] for k in ("scanners", "scanner", "root", "watcher")
+                  if k in vars(afi.Handler)}
+
+        def restore():                      # main() sets these on the class; put them back
+            for k in ("scanners", "scanner", "root", "watcher"):
+                if k in before:
+                    setattr(afi.Handler, k, before[k])
+                elif k in vars(afi.Handler):
+                    delattr(afi.Handler, k)
+        self.addCleanup(restore)
+        with tempfile.TemporaryDirectory() as root,                 patch.object(afi, "DashboardServer", side_effect=OSError(10048, "in use")),                 patch("sys.argv", ["afi", "--dir", root, "--no-copilot", "--no-browser"]),                 patch("builtins.print"):
+            with self.assertRaises(SystemExit) as cm:
+                afi.main()
+        self.assertIn("already in use", str(cm.exception.code))
+        self.assertIn("--port 8789", str(cm.exception.code))
+
 if __name__ == "__main__":
     unittest.main()

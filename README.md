@@ -32,9 +32,13 @@ cd dev-token-dashboard-multi-ai
 python ai_fluency_insights.py
 ```
 
-Opens http://localhost:8787. Requires Python 3.8+ and a machine where
+Opens http://localhost:8788. Requires Python 3.8+ and a machine where
 Claude Code and/or GitHub Copilot has been used (it reads `~/.claude/projects/`
 and Copilot's local logs; either one is enough).
+
+It runs side by side with the original Claude-only dashboard
+([dev-token-dashboard](https://github.com/chandan12ar/dev-token-dashboard), port 8787):
+its own port, its own auto-start task, and pop-ups shown once.
 
 Full instructions, auto-start at logon, and troubleshooting: **[SETUP.md](SETUP.md)**
 

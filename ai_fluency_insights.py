@@ -6,7 +6,7 @@ It reads the JSONL session logs Claude Code already writes to ~/.claude/projects
 (no API calls, no tokens consumed) and serves a live auto-refreshing dashboard.
 
 Usage:
-    python ai_fluency_insights.py            # serves on http://localhost:8787
+    python ai_fluency_insights.py            # serves on http://localhost:8788
     python ai_fluency_insights.py --port 9000
     python ai_fluency_insights.py --dir "C:/Users/you/.claude/projects"
 
@@ -14,11 +14,13 @@ Requires: Python 3.8+ (standard library only).
 """
 
 import argparse
+import http.client
 import json
 import math
 import os
 import re
 import shutil
+import socket
 import statistics
 import subprocess
 import sys
@@ -1573,6 +1575,9 @@ class NotificationWatcher:
         self.trackers = {}       # sid -> SessionTokenTracker
         self.meta = {}           # sid -> {"project":..., "title":...}
         self.recent_events = []  # for the /api/stats "notifications" field
+        # True while the original Claude-only dashboard runs: it shows the same pop-ups, so this
+        # copy still tracks and lists events but leaves the toasts to it (each one once, not twice).
+        self.muted = False
         self._lock = threading.Lock()
         pw = saved.get("plan_window") or {}
         self.plan_tracker = PlanWindowTracker(
@@ -1753,7 +1758,7 @@ class NotificationWatcher:
         with self._lock:
             self.recent_events.append(event)
             del self.recent_events[:-50]
-        send_windows_toast(f"{project} — {title}"[:64], label)
+        self._toast(f"{project} — {title}"[:64], label)
 
     def _fire_plan(self, value, total):
         resets_in = self.plan_tracker.resets_in_seconds(time.time())
@@ -1771,7 +1776,7 @@ class NotificationWatcher:
         with self._lock:
             self.recent_events.append(event)
             del self.recent_events[:-50]
-        send_windows_toast("Plan usage limits (estimate)", label)
+        self._toast("Plan usage limits (estimate)", label)
 
     def _fire_official(self, kind, label, milestone, pct, resets_at):
         resets_txt = ""
@@ -1790,7 +1795,11 @@ class NotificationWatcher:
         with self._lock:
             self.recent_events.append(event)
             del self.recent_events[:-50]
-        send_windows_toast(f"{label} usage", message)
+        self._toast(f"{label} usage", message)
+
+    def _toast(self, title, message):
+        if not self.muted:
+            send_windows_toast(title, message)
 
     def plan_window_snapshot(self):
         now = time.time()
@@ -6495,9 +6504,13 @@ class Handler(BaseHTTPRequestHandler):
 STATUSLINE_MARKER = "ai_fluency_insights_statusline.js"
 # Installs made before the rename point at this file; still treated as ours.
 LEGACY_STATUSLINE_MARKER = "dev_token_dashboard_statusline.js"
-# Windows logon task names: current, and the pre-rename one (cleaned up on install/uninstall).
-STARTUP_TASK = "AIFluencyInsights"
-LEGACY_STARTUP_TASK = "DevTokenDashboard"
+# Windows logon task. It has its own name so it never replaces (or removes) the original
+# Claude-only dashboard's "AIFluencyInsights" / "DevTokenDashboard" task on a laptop that runs both.
+STARTUP_TASK = "AIFluencyInsightsMultiAI"
+# The original Claude-only dashboard (dev-token-dashboard) serves on 8787; this one defaults to
+# 8788 so both can run on the same laptop.
+DEFAULT_PORT = 8788
+ORIGINAL_DASHBOARD_PORT = 8787
 
 
 def claude_config_dir():
@@ -6953,6 +6966,33 @@ def startup_hint(rate_limits_path=None, is_windows=None, statusline_js_path=None
     return None
 
 
+class DashboardServer(ThreadingHTTPServer):
+    """The dashboard's HTTP server, holding its port exclusively. Python's default lets a second
+    program open a port that is already listening on Windows, and the browser then gets either
+    one at random; this way a busy port fails at startup with a clear message instead."""
+    allow_reuse_address = os.name != "nt"     # POSIX: a quick restart may reuse a closing port
+
+    def server_bind(self):
+        if os.name == "nt" and hasattr(socket, "SO_EXCLUSIVEADDRUSE"):
+            self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_EXCLUSIVEADDRUSE, 1)
+        super().server_bind()
+
+
+def original_dashboard_running(port=ORIGINAL_DASHBOARD_PORT, timeout=2.0):
+    """True when an AI Fluency Insights page answers on localhost:`port` (the original Claude-only
+    dashboard). Localhost only; any error means no."""
+    conn = http.client.HTTPConnection("127.0.0.1", port, timeout=timeout)
+    try:
+        conn.request("GET", "/")
+        resp = conn.getresponse()
+        body = resp.read()               # read it all: closing early would log an error over there
+        return resp.status == 200 and b"<title>AI Fluency Insights</title>" in body[:8192]
+    except (OSError, http.client.HTTPException):
+        return False
+    finally:
+        conn.close()
+
+
 def default_root():
     env = os.environ.get("CLAUDE_CONFIG_DIR")
     if env:
@@ -6963,7 +7003,9 @@ def default_root():
 def main():
     ap = argparse.ArgumentParser(description="Local Claude Code usage dashboard (zero token cost)")
     ap.add_argument("--dir", default=default_root(), help="Claude projects log dir")
-    ap.add_argument("--port", type=int, default=8787)
+    ap.add_argument("--port", type=int, default=DEFAULT_PORT,
+                    help=f"default {DEFAULT_PORT} (the original Claude-only dashboard uses "
+                         f"{ORIGINAL_DASHBOARD_PORT}, so both can run)")
     ap.add_argument("--no-browser", action="store_true")
     ap.add_argument("--dump", action="store_true", help="print stats JSON and exit (for testing)")
     ap.add_argument("--install-startup", action="store_true",
@@ -7007,14 +7049,10 @@ def main():
             sys.exit("Startup install is Windows-only.")
         import subprocess
         task = STARTUP_TASK
-        quiet = dict(stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         if args.uninstall_startup:
             subprocess.run(["schtasks", "/Delete", "/TN", task, "/F"])
-            subprocess.run(["schtasks", "/Delete", "/TN", LEGACY_STARTUP_TASK, "/F"], **quiet)
             print("Removed logon task.")
             return
-        # Drop the pre-rename task so two copies don't start at logon.
-        subprocess.run(["schtasks", "/Delete", "/TN", LEGACY_STARTUP_TASK, "/F"], **quiet)
         pyw = sys.executable.replace("python.exe", "pythonw.exe")
         if not os.path.exists(pyw):
             pyw = sys.executable
@@ -7068,7 +7106,12 @@ def main():
     Handler.scanner = claude
     Handler.root = args.dir
     Handler.watcher = watcher
-    srv = ThreadingHTTPServer(("127.0.0.1", args.port), Handler)
+    try:
+        srv = DashboardServer(("127.0.0.1", args.port), Handler)
+    except OSError as e:
+        sys.exit(f"[!] Port {args.port} is already in use ({e.strerror or e}). Is another dashboard "
+                 f"running? Open it, stop it, or pick another port:  "
+                 f"python ai_fluency_insights.py --port {args.port + 1}")
     url = f"http://localhost:{args.port}"
     print(f"  AI Fluency Insights running at {url}")
     if claude:
@@ -7083,8 +7126,17 @@ def main():
         threading.Timer(0.8, lambda: webbrowser.open(url)).start()
 
     def _notify_loop():
+        checked = 0.0
         while True:
             try:
+                if args.port != ORIGINAL_DASHBOARD_PORT and time.time() - checked >= 60:
+                    checked = time.time()
+                    muted = original_dashboard_running()
+                    if muted != watcher.muted:
+                        print("  Toast notifications: " + (
+                            f"paused, the original dashboard on port {ORIGINAL_DASHBOARD_PORT} shows them"
+                            if muted else "back on"))
+                    watcher.muted = muted
                 watcher.poll_once()
             except Exception as e:
                 print(f"[warn] notification watcher error: {e}")
