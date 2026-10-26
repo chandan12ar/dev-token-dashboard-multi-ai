@@ -47,6 +47,65 @@ requests — even Chart.js is bundled locally.
 
 ---
 
+## The tool switch *(v1.5)*
+
+In the top bar, left of the date range, a switch picks whose numbers you are
+looking at: **Claude Code | GitHub Copilot | All AI**.
+
+- **It only appears when more than one tool has data** on this machine. With
+  only Claude Code logs (or `--no-copilot`) the page looks as it always did.
+- **Colours tell you which tool you are in.** Claude Code keeps its orange,
+  GitHub Copilot is violet, All AI is teal. The same three colours mark each
+  tool inside All AI charts. Text that names the tool changes too: "You vs
+  Claude" becomes "You vs Copilot", the sidebar says "GitHub Copilot analytics",
+  and "Est. API cost" becomes "Credits used".
+- **Your choice is remembered** in this browser, and switching keeps the section
+  and range you are on.
+- **Each tool is computed on its own data.** Copilot gets the same sections as
+  Claude Code (Overview, Time & Focus, Tools & Models, Projects, Weekly Report, My
+  Adoption, Flow, Quality, Value, Advisor, Data Health), with Copilot's own
+  tool names, feature list and tips. Claude's numbers are never mixed into
+  Copilot's, or the reverse.
+- **All AI is a separate summary** with four pages: Overview, Time & Focus,
+  Tools & Models and Projects. The other pages are per-tool, so they are dimmed
+  (not hidden) while All AI is selected; hover one for the reason. Switching to
+  All AI from one of them lands on Overview. Combined totals add up tokens,
+  prompts and sessions; active time counts the minutes you used *either* tool
+  once; models and projects show each tool's share. **Cost is never added**:
+  Claude's estimated dollars and Copilot's credits sit side by side. The rules
+  are in [METRICS.md §19](METRICS.md#19-github-copilot-v15).
+
+### "Not available for Copilot"
+
+Copilot's logs do not carry everything Claude Code's do. When a card's number
+cannot be known, it says **Not available for Copilot** with a one-line reason in
+the card's normal place, instead of a `0`. Typical ones:
+
+| Card | Why |
+|---|---|
+| Interrupted (in Friction) | only shown when your VS Code records stopped requests; older logs do not. The Friction card then reads "Tool errors" |
+| Cache read and hit % | Copilot's chat history has no cache split; it shows up once some sessions have exact tokens |
+| Cold-start tax, cache savings | Copilot bills per request, so there is no cache price to measure |
+| Approval modes | Copilot does not log them |
+
+A number that exists but is only an estimate (Copilot token counts from chat
+history) carries an **approx.** badge. The Copilot **Data Health** tab lists
+which signals your logs have, and whether token counts are exact or approximate.
+If Copilot is selected but no Copilot logs are found, a friendly panel says where
+the dashboard looked.
+
+### Exact Copilot tokens
+
+By default Copilot's chat history gives approximate tokens (per request, and an
+agent turn may log only its last model call). Three things give exact ones: the
+Copilot CLI (always exact), the VS Code setting
+`github.copilot.chat.agentDebugLog.fileLogging.enabled` (note: this also stores
+your full prompts on your disk), or the OpenTelemetry export that
+`python ai_fluency_insights.py --setup-copilot` switches on (no prompt text by
+default). See [SETUP.md](../SETUP.md#3c-optional-github-copilot).
+
+---
+
 # Tab 1: Dashboard
 
 ## Header & range bar
@@ -55,7 +114,11 @@ requests — even Chart.js is bundled locally.
   tokens; it only reads files.
 - **Range buttons (7 / 30 / 90 days / All time / custom dates)** — every
   card, chart, and table below follows the selected range. The Weekly
-  Report tab is the exception: it is always full history.
+  Report tab is the exception: it is always full history. 7 / 30 / 90 days
+  means today plus the days before it (calendar days, your local time), so
+  "7 days" is always a full week even if you did not work on some of them.
+- **Tool switch** — Claude Code / GitHub Copilot / All AI, see
+  [above](#the-tool-switch-v15).
 
 ## Momentum bar
 
@@ -123,6 +186,11 @@ days before).
 | **Friction** | times you hit Esc to interrupt + failed tool calls — a "how often did the workflow hurt" counter |
 | **Your tokens** | an estimate of tokens *you personally typed* (~4 characters per token) |
 | **Leverage** | the headline number: **Claude output tokens ÷ tokens you typed**. 50× means every token you type produces fifty back |
+
+For GitHub Copilot the cards are the same, with Copilot's units: **Credits
+used** replaces Est. API cost (credits as Copilot's logs report them, no dollar
+conversion), and a **Premium requests** figure appears when your account is
+billed per request. Credits and premium requests are never added together.
 
 *How to read it:* Leverage is the best single "what does AI assistance
 multiply my effort by" number. Friction trending down over weeks means
@@ -404,6 +472,27 @@ Exact formulas: [METRICS.md §13-§17](METRICS.md#13-flow-tab-v14).
 ---
 
 # FAQ — questions your team will ask
+
+**"Can it show GitHub Copilot as well?"**
+Yes. Use the switch in the top bar. It reads Copilot's local VS Code chat logs
+and the Copilot CLI's logs, nothing else, and nothing leaves the machine. It
+works for any Copilot plan, because it reads whatever Copilot wrote to disk.
+
+**"Why does Copilot show credits and not dollars?"**
+Copilot's logs report AI credits, so that is what is shown. Nothing is priced
+from a model table, and credits are never added to Claude's estimated dollars.
+
+**"Why does a Copilot card say 'Not available'?"**
+Your Copilot logs do not contain that figure (for example, older VS Code does
+not record stopped requests). It is never shown as 0. The Data Health tab says
+what is missing. If the numbers look wrong, run the read-only log checker
+described in [SETUP.md](../SETUP.md#3c-optional-github-copilot) and look at its
+report.
+
+**"Are Copilot's token counts exact?"**
+Only for the Copilot CLI, or once you turn on the debug log or the
+OpenTelemetry export (`--setup-copilot`). Otherwise they are approximate and
+marked "approx.".
 
 **"Is this sending our code anywhere?"**
 No. It reads local log files, serves a page on `127.0.0.1` only, and

@@ -6,9 +6,9 @@
 > statusline hook to the new script name, and `--install-startup` to replace the
 > old Windows logon task.
 
-A **100% local** dashboard for your Claude Code usage. Zero token cost — it
-never calls any API. It reads the session logs Claude Code already saves on
-your machine and turns them into live charts, developer insights, a
+A **100% local** dashboard for your Claude Code and GitHub Copilot usage. Zero
+token cost — it never calls any API. It reads the session logs those tools
+already save on your machine and turns them into live charts, developer insights, a
 ready-to-paste **weekly update**, a personal **adoption scorecard**, and
 **flow / quality / value** analysis with evidence-based advice.
 
@@ -33,9 +33,52 @@ python ai_fluency_insights.py
 ```
 
 Opens http://localhost:8787. Requires Python 3.8+ and a machine where
-Claude Code has been used (it reads `~/.claude/projects/`).
+Claude Code and/or GitHub Copilot has been used (it reads `~/.claude/projects/`
+and Copilot's local logs; either one is enough).
 
 Full instructions, auto-start at logon, and troubleshooting: **[SETUP.md](SETUP.md)**
+
+## What's new (v1.5) — GitHub Copilot and "All AI"
+
+The same dashboard now reads **GitHub Copilot** too: VS Code chat (ask, edit and
+agent mode) and the Copilot CLI. Still 100 % local, zero tokens, standard
+library only.
+
+- **A tool switch in the top bar** — *Claude Code | GitHub Copilot | All AI*.
+  Each tool has its own accent colour (Claude orange, Copilot violet, All AI
+  teal), so you always know whose numbers you are looking at. Your choice is
+  remembered, and the switch only appears when more than one tool has data.
+- **GitHub Copilot** gets the same sections as Claude Code (Overview, Time &
+  Focus, Tools & Models, Projects, Weekly Report, My Adoption, Flow, Quality,
+  Value, Advisor, Data Health), computed from Copilot's own logs only. Cost is
+  shown as **AI credits** as Copilot logs them, never converted to dollars.
+- **All AI** is a separate summary of what means the same thing in both tools:
+  total tokens, active time, prompts, models and projects, with a per-tool
+  split. It never adds Claude's dollars to Copilot's credits.
+- **Honest labels** — a number Copilot's logs cannot give says "Not available
+  for Copilot" and why, never a fake zero. Token counts that are only an
+  estimate carry an "approx." badge.
+- **Exact tokens, opt-in** — `--setup-copilot` turns on VS Code's official
+  OpenTelemetry file export so new chats log exact token counts (it asks first
+  and backs your settings up).
+- **Calendar-day ranges** — "7 / 30 / 90 days" now means today plus the days
+  before it, in local time, for every tool (it used to mean the last N days
+  that had activity). "All time" and custom from–to ranges are unchanged, and
+  so is every Claude Code number for them.
+
+New command-line flags:
+
+| Flag | What it does |
+|---|---|
+| `--copilot-root PATH` | read Copilot logs from an extra VS Code user folder (repeatable) |
+| `--no-copilot` | ignore Copilot logs; the switch then hides |
+| `--setup-copilot` | turn on exact token logging in VS Code (add `--dry-run` to preview, `--undo` to remove) |
+| `--dump --source claude\|copilot\|all` | print one tool's stats JSON and exit |
+
+How it works: [docs/HOW_IT_WORKS.md](docs/HOW_IT_WORKS.md#the-data-source) ·
+formulas: [docs/METRICS.md](docs/METRICS.md#19-github-copilot-v15) ·
+tour: [docs/DASHBOARD_GUIDE.md](docs/DASHBOARD_GUIDE.md#the-tool-switch-v15) ·
+setup and the log checker: [SETUP.md](SETUP.md#3c-optional-github-copilot).
 
 ## What's new (v1.4) — the "Engineering insight" update
 
@@ -188,12 +231,19 @@ exploration-vs-building gauge. Then:
 
 Everything stays on your machine. The server binds to `127.0.0.1` only,
 Chart.js is bundled locally, and the page makes zero external requests.
-Your prompts and logs never leave your disk.
+Your prompts and logs never leave your disk. Copilot's files are opened
+read-only. The only Copilot-related change it can make is to your VS Code
+`settings.json`, and only if you run `--setup-copilot` and answer yes (the old
+file is backed up first).
 
 ## Notes
 
 - Cost is an *estimate* at public API pricing — on a subscription plan your
   real marginal cost is $0. Tune the `PRICING` table at the top of the script.
+- For GitHub Copilot, cost is **credits** as Copilot's logs report them, not
+  dollars. Without exact tokens enabled, Copilot's token counts are
+  approximate (an agent turn may log only its last model call) and are marked
+  "approx." on screen.
 - Token totals are **deduplicated per API response**, which is why they're
   lower (and more accurate) than the official Claude Code panel's count —
   the full analysis is in [docs/TOKEN_COUNTS.md](docs/TOKEN_COUNTS.md).
@@ -206,8 +256,8 @@ Your prompts and logs never leave your disk.
 - [docs/DASHBOARD_GUIDE.md](docs/DASHBOARD_GUIDE.md) — **the tour**: every
   section explained in plain language — what it tells you, how the data
   becomes the number, and how to read it (great for showing your team)
-- [SETUP.md](SETUP.md) — install, run, auto-start on Windows/macOS/Linux
-- [docs/HOW_IT_WORKS.md](docs/HOW_IT_WORKS.md) — architecture and every panel explained
+- [SETUP.md](SETUP.md) — install, run, auto-start on Windows/macOS/Linux, and GitHub Copilot setup
+- [docs/HOW_IT_WORKS.md](docs/HOW_IT_WORKS.md) — architecture, the Claude and Copilot data sources, and every panel explained
 - [docs/METRICS.md](docs/METRICS.md) — **the math**: exact formula behind every metric, what each dashboard section means, and the known approximations
 - [docs/TOKEN_COUNTS.md](docs/TOKEN_COUNTS.md) — why our token counting is the correct one
 

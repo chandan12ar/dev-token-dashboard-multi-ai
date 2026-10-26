@@ -133,7 +133,7 @@ The home-laptop samples cover the incremental chat sessions, empty-window chats,
 transcript, one debug log with only `session_start`, the session store, and one CLI
 session. Builders should copy the *shape* of these into test fixtures with made-up values.
 The real files stay on the machine. The checker report at
-`C:\Users\Chandan\AppData\Local\Temp\claude\…\scratchpad\report_this_laptop.md` lists the
+`C:\Users\<user>\AppData\Local\Temp\claude\…\scratchpad\report_this_laptop.md` lists the
 observed field paths. Re-run `python tools/copilot_log_check.py` to regenerate it.
 
 ## 5. How it works
@@ -292,7 +292,7 @@ payload** for the four All AI pages. Combining rules:
 | Active time / focus | **Union of 10-minute buckets** across tools, never a sum. Ten minutes using both tools counts as 10 minutes. |
 | Heatmap (weekday × hour), late-night and weekend share | Built from the **same union of 10-minute slots**: a cell counts the active slots in that weekday-hour. It is not a sum of each tool's log-line counts, because Claude writes many lines per prompt and Copilot few, so a sum would measure log chattiness instead of time. *(Claude's call, after the reviewer flagged it.)* |
 | Models | One list, each row tagged with its tool. A model used through both tools appears twice, as separate rows. |
-| Projects | Matched across tools by **real folder path** (case-insensitive on Windows), with per-tool tokens/prompts side by side. |
+| Projects | Matched across tools by **real folder path** (case-insensitive on Windows), with per-tool tokens/prompts side by side. *(As built: merged by the project label, Claude Code's folder naming with the drive letter normalised, so the same folder from both tools is one row. Two folders whose names differ only in punctuation, such as `my.proj` and `my-proj`, share a label.)* |
 | Cost | **Never summed.** Claude "$X est." and Copilot "N credits" shown side by side. |
 | Deltas vs previous window | Computed on the combined totals with the same rules. |
 
@@ -468,3 +468,13 @@ structure-only report. Then:
 - update the "Last verified" line in this document
 
 Nothing in §5–7 is expected to change. Only §4's field details and the translator are.
+
+### Result (2026-10-26)
+
+**Last verified:** 2026-10-26, against three office reports (checker v1). They came from VS Code 1.121–1.142 and Copilot Chat 0.49–0.70, with Copilot CLI 1.0.74–1.0.103 on one machine.
+
+- **No field names changed.** Every field in §4 exists as described, including the older whole-file `.json` format.
+- **One model appeared under several spellings** (`claude-haiku-4-5-20251001`, `claude-haiku-4.5`, `copilot/claude-haiku-4.5`). Model names are now normalised to one id (plan Task 15).
+- **Requests record `modelState {value, completedAt}`.** In VS Code `ResponseModelState`, value 2 means Cancelled. Copilot therefore gets a real "interrupted" figure when its logs have this field, and §7's "interruptions not available" applies only to logs without it. `completedAt` gives the request's end time.
+- **CLI logs carry routine `permission.*`, `skill.*`, `subagent.*` and `model.*` records.** They are ignored and are no longer reported as unknown types.
+- **Exact tokens:** two of the three machines had debug logs without `llm_request` because the setting was off. The confirmed setting is `github.copilot.chat.agentDebugLog.fileLogging.enabled`, and Data Health names it next to the OTel option.

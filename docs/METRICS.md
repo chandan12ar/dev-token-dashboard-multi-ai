@@ -4,6 +4,11 @@ This document is the formula reference for the dashboard. It explains where
 the data comes from, the exact math behind every metric, and what each section
 of the UI refers to — so you can trust (or audit) any number you see.
 
+Sections 1-18 describe Claude Code. GitHub Copilot runs the same calculations
+on its own data; where it differs (credits, token accuracy, "interrupted") and
+how the **All AI** view combines the two tools is in
+[§19](#19-github-copilot-v15).
+
 Companion docs:
 - [HOW_IT_WORKS.md](HOW_IT_WORKS.md) — architecture and data pipeline
 - [TOKEN_COUNTS.md](TOKEN_COUNTS.md) — why our token totals differ from the
@@ -249,19 +254,27 @@ Darker cell = more messages in that hour slot.
 
 ### Range filtering
 
-The 7 / 30 / 90-day buttons keep the **last N active days** (calendar days
-that have any activity). The custom from–to picker filters by exact calendar
-dates. Either way the server rebuilds a range-scoped stats object, so **every
-card — charts, tables, longest prompts, project modal — respects the range**,
-not just the headline KPIs. The Weekly Report tab always uses full history.
+The 7 / 30 / 90-day buttons keep **calendar days**: today plus the N−1 days
+before it, in your local time. A day with no activity inside that window still
+counts as part of it, so "last 7 days" always spans a full week, whatever tool
+you are looking at (the same rule for Claude Code, GitHub Copilot and All AI).
+The custom from–to picker filters by exact calendar dates, and "All time" is
+everything. Either way the server rebuilds a range-scoped stats object, so
+**every card — charts, tables, longest prompts, project modal — respects the
+range**, not just the headline KPIs. The Weekly Report tab always uses full
+history.
+
+*Before v1.5 the 7 / 30 / 90 buttons kept the last N days that had activity.
+For a tool used only on some days that gave the wrong window, so it changed. "All
+time" and custom ranges give the same Claude Code numbers as before.*
 
 ### Period-over-period deltas (▲ / ▼ on KPI cards)
 
-For a rolling N-day window, the comparison window is the N active days
+For a rolling N-day window, the comparison window is the N calendar days
 immediately before it:
 
 ```
-current = last N active days          previous = the N days before those
+current = today and the N−1 days before   previous = the N days before those
 delta % = round((current − previous) / previous × 100)
 ```
 
@@ -594,7 +607,7 @@ not used as a "human touch-up" metric.
 | Your tokens / leverage | ~4 chars-per-token heuristic, no real tokenizer |
 | LoC | additions only; no deletion credit; rewrites count again |
 | Session duration | wall-clock span including idle time |
-| 7/30/90-day ranges | last N *active* days, not strict calendar windows |
+| 7/30/90-day ranges | calendar days: today plus the N−1 days before it, local time (before v1.5 this was the last N *active* days) |
 | Messages | meta entries, command output and interruptions are filtered — so the count is lower than the official panel's |
 | Active time | 10-min buckets; an isolated message = 10 min; focus blocks don't span midnight |
 | Task types | keyword heuristics on AI titles; ambiguous sessions land in "other" |
@@ -614,3 +627,137 @@ not used as a "human touch-up" metric.
 
 Everything else — token totals, cache numbers, tool counts, per-model and
 per-project splits — is exact arithmetic over deduplicated log entries.
+
+---
+
+## 19. GitHub Copilot (v1.5)
+
+Copilot's logs are translated into the same event shape as Claude Code's and run
+through the same formulas, each tool on its own data. Sections 2-17 therefore
+apply to Copilot as they are, except for what is listed here. Copilot's log
+formats are undocumented and change between releases, so the field names the
+reader uses are the best current knowledge, and anything it does not recognise is
+skipped and counted on the Data Health tab.
+
+### Credits, not dollars
+
+Copilot's cost is **AI credits**, read from the logs and never priced from a
+model table:
+
+```
+credits = nanoAiu / 1,000,000,000          (Copilot CLI, debug log, OpenTelemetry)
+credits = copilotCredits as logged         (VS Code chat sessions, already in credits)
+```
+
+Every place the Claude view shows "Est. API cost" shows "Credits used" for
+Copilot ("Credits per 100 lines" instead of "Cost per 100 lines", and so on). A
+model call with no credits in the logs adds nothing and is counted on Data
+Health, so the total can read low rather than be guessed. There is no dollar
+conversion and no "% of monthly allowance" (that would need your plan).
+
+### Premium requests
+
+Some accounts are billed per request instead of in credits. Then a request's
+details read like "Claude Opus 4.5 • 3x" (a multiplier) rather than "• 0.5
+credits". The unit is decided per record from what the log says. Each user
+prompt counts once times its multiplier, in a **separate "premium requests"
+figure**. Premium requests are never added to credits, and a machine whose logs
+hold both shows both.
+
+### Approximate versus exact tokens
+
+| How the session was logged | Tokens |
+|---|---|
+| Copilot CLI | **exact**, always (one usage record per model call) |
+| VS Code debug log (setting `github.copilot.chat.agentDebugLog.fileLogging.enabled`) | **exact**; the debug log also stores your full prompts locally |
+| OpenTelemetry file export (`--setup-copilot`) | **exact**; no prompt text by default |
+| Otherwise: VS Code chat history | **approx.**: per-request prompt and completion tokens, and an agent turn may record only its **last** model call, so totals can read low |
+
+Each session uses exactly **one** token source, never a sum, in that order. The
+Data Health tab shows how many sessions are exact and how many are approximate,
+and names the setting to turn on. Approximate figures carry the "approx."
+badge on screen.
+
+### The token convention
+
+Claude's `input` excludes cache tokens (cache read and write are separate
+fields, and cache hit % = cache read ÷ (cache read + input)). Copilot is made to
+match wherever its log gives a split:
+
+```
+input = inputTokens − cacheReadTokens − cacheWriteTokens      (floored at 0)
+```
+
+Copilot's CLI, OpenTelemetry and debug logs report input *including* cached
+tokens, hence the subtraction. VS Code chat history has no split: the whole
+prompt counts as `input`, cache stays unknown, and the session is flagged "no
+cache split". So Copilot's cache hit % is computed **only over the sessions that
+have a split** (the exact ones in the selected range): cache read ÷ (cache read +
+input) of those sessions, so approximate sessions never dilute it. When the
+selected range holds no session with a split, cache read and cache hit % read
+"Not available for Copilot" for that range, with the reason, never 0%. Turn on
+exact tokens (above) to get a split for new chats.
+
+### "Interrupted" and other figures Copilot may not have
+
+A figure the logs do not carry is shown as "Not available for Copilot" with the
+reason, never as 0.
+
+- **Interrupted** comes from `requests[].modelState.value == 2` (VS Code's
+  `ResponseModelState`, "Cancelled"). It is available only when the scanned chat
+  logs record `modelState`; older logs read "Not available for Copilot". Data
+  Health shows a "Stopped requests" row (ok / partial / missing).
+- **Cache hit %** and cache reads: only when some sessions in the range have exact tokens (see above).
+- **Cold-start tax** and **cache savings**: never available, because Copilot
+  bills per request and there is no cache price to measure against.
+- **Permission modes**: Copilot does not log approval modes.
+- Inline "ghost text" completions are not logged at all, so they are not counted.
+
+### Other differences
+
+- **Tools and lines of code.** Copilot's real tool names are added to the
+  read / write / command categories (for example `read_file`,
+  `replace_string_in_file`, `run_in_terminal`), so charts show them as they are.
+  Lines of code are counted from each write tool's arguments (additions only).
+  Copilot skips write calls whose result failed (an `ERROR` result in chat
+  history, `success: false` in an agent log), so a failed edit adds no lines;
+  Claude Code's lines are counted as its logs record them, failed or not. Models are normalised so one model has one row
+  (dates stripped, `claude-haiku-4-5` and `claude-haiku-4.5` are the same).
+- **Projects, branches, titles.** The project is the VS Code workspace folder (or
+  the Copilot CLI's working folder); chats with no folder open are "(no folder)".
+  The branch comes from the CLI or the session store, else "(none)". A session's
+  title is Copilot's own, else the session store's summary, else the first prompt.
+- **Project instructions** look for `.github/copilot-instructions.md` or
+  `AGENTS.md` instead of `CLAUDE.md`.
+- **VS Code vs CLI.** A small chart on Copilot's Overview splits prompts by where a
+  session was *started* (VS Code chat or Copilot CLI).
+- **My Adoption and Advisor** use Copilot's own feature list (agent / ask / edit /
+  plan mode, subagents, MCP tools, custom instructions, prompt files, terminal
+  commands, web fetch, model variety) and only the tips whose inputs exist for
+  Copilot. The scoring formulas are unchanged.
+- **Plan usage limits and toast notifications** are Claude-only and are hidden for
+  Copilot and All AI.
+
+### All AI: what may be combined
+
+The **All AI** view builds both tools over **one** date window (so its per-tool
+split always matches each tool's own page for the same button) and combines only
+what means the same thing in both:
+
+| Quantity | Rule |
+|---|---|
+| Total tokens | input + cache read + cache write + output, summed over both tools, always with the per-tool split. Copilot's part of the split, and its series in the daily chart, carry "approx." when some of its sessions in the range have approximate tokens (`by_tool.copilot.token_modes`) |
+| Prompts, sessions | summed |
+| Active days | days with **any** AI activity (set union) |
+| Active time and focus | the **union of 10-minute slots** across tools, never a sum: ten minutes spent in both tools counts as ten |
+| Weekday × hour heatmap, late-night and weekend share | built from the same union of 10-minute slots, not from log-line counts (Claude writes many lines per prompt and Copilot few, so summing lines would measure log chattiness instead of time) |
+| Models | one list with each row tagged by its tool; a model used through both tools appears as two rows |
+| Projects | merged by the project label, which is Claude Code's folder naming (every non-alphanumeric character becomes "-") with the drive letter normalised, so the same folder used from both tools is one row, with per-tool numbers side by side. Two different folders whose names differ only in punctuation (for example `my.proj` and `my-proj`) share a label and are merged |
+| Cost | **never summed**: Claude's "$ est." and Copilot's credits (and premium requests) are shown side by side |
+| Interruptions | counted only from tools that log them; the payload names them in `interruptions_from` |
+| Deltas vs the previous window | computed on the combined totals with the same rules |
+
+All AI has four pages (Overview, Time & Focus, Tools & Models, Projects). Weekly
+Report, My Adoption, Flow, Quality, Value, Advisor and Data Health are per-tool
+and are dimmed while All AI is selected. All AI is offered only when **both** tools
+have data on this machine.

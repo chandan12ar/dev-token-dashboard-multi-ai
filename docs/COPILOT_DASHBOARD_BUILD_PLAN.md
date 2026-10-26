@@ -1,3 +1,5 @@
+> **Superseded:** these are early research notes. The binding design and plan are `docs/superpowers/specs/2026-10-24-copilot-source-design.md` and `docs/superpowers/plans/2026-10-24-copilot-source.md`.
+
 # Build Plan — Local GitHub Copilot Usage Dashboard (VS Code)
 
 > **Purpose of this document.** This is a self-contained hand-off spec. It is written to be
