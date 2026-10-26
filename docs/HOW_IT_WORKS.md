@@ -1,8 +1,8 @@
 # How AI Fluency Insights Works
 
-A 100% local dashboard for Claude Code usage. It consumes **zero tokens** — it
-never calls any API. It only reads the session logs Claude Code already saves
-on this machine, parses them, and serves a live web page.
+A 100% local dashboard for Claude Code and GitHub Copilot usage. It consumes
+**zero tokens** — it never calls any API. It only reads the session logs those
+tools already save on this machine, parses them, and serves a live web page.
 
 ## The data source
 
@@ -16,6 +16,38 @@ Each line is one event: a user prompt, an assistant response (with token
 usage, model name, timestamp), or a tool call (Write/Edit/etc. with the exact
 content written). The dashboard is nothing more than a parser + aggregator
 over these files. Nothing leaves the machine.
+
+### GitHub Copilot's stores
+
+Copilot writes several different logs, and none of them is a documented
+format. The dashboard reads these, all **read-only**. `<User>` is the VS Code
+user folder (`%APPDATA%\Code\User` on Windows,
+`~/Library/Application Support/Code/User` on macOS, `~/.config/Code/User` on
+Linux). Insiders, VSCodium, named profiles and `~/.vscode-server` are found
+too, and `--copilot-root PATH` adds more.
+
+| Store | Where | What it gives | Tokens |
+|---|---|---|---|
+| Chat sessions | `<User>/workspaceStorage/<hash>/chatSessions/` (and `globalStorage/emptyWindowChatSessions/` for chats with no folder open) | prompts, timestamps, models, tool calls, per-request credits, whether a request was stopped. Newer builds write an incremental `.jsonl`, older ones one `.json` | approx. |
+| Transcripts | `.../GitHub.copilot-chat/transcripts/` | the turn-by-turn event log; on some machines the only chat store | none |
+| Debug logs | `.../GitHub.copilot-chat/debug-logs/<session>/` | one record per model call, with exact tokens and credits, **when** the VS Code setting `github.copilot.chat.agentDebugLog.fileLogging.enabled` is on | exact |
+| OpenTelemetry file | the path in `github.copilot.chat.otel.outfile` (`--setup-copilot` sets it) | exact tokens per model call; no prompt text by default | exact |
+| Copilot CLI | `~/.copilot/session-state/<id>/events.jsonl` | one usage record per model call | exact, always |
+| Session store and workspace map | `globalStorage/github.copilot-chat/session-store.db`, `workspaceStorage/<hash>/workspace.json` | only enrich: project folder, branch, summary | n/a |
+
+**One session, one source.** The same chat can appear in several of these.
+The dashboard works out each session once, by its session id:
+- prompts, timestamps and tools come from the chat-session file, or from the
+  transcript when there is no chat file;
+- tokens come from exactly **one** place, the best available: OpenTelemetry,
+  then the debug log, then the chat file's per-request numbers (approx.). They
+  are never added together. For a CLI session the CLI's exact usage records win;
+- anything seen twice inside one store (a usage record or a request) is counted
+  once.
+
+The session-store database is never a source of turns or tokens, and Copilot's
+files are opened read-only (a database with a write-ahead log is read from a
+temporary copy).
 
 ## The pipeline
 
@@ -34,6 +66,27 @@ over these files. Nothing leaves the machine.
 3. **Web server** — a stdlib `ThreadingHTTPServer` on `http://localhost:8787`
    serving a single-page dashboard. The page fetches `/api/stats` and
    re-renders every 15 seconds.
+
+**With Copilot.** `CopilotScanner` (in the main file; the Copilot readers and
+translators it calls live in `copilot_source.py`, beside it) has the same shape
+as `Scanner`: it caches each file's `(mtime, size)` and re-reads only what
+changed. A *translator* turns each Copilot session into the same event shape the
+Claude parser already understands, and those events go through the existing
+`parse_entry` into a **separate** stats object. So every calculation runs
+unchanged on Copilot, each tool on its own data, and Copilot's numbers can never
+leak into Claude's or the reverse. Unknown fields are skipped and counted
+(visible on Data Health), never fatal: each session is translated inside its own
+guard, so a session that cannot be translated at all is counted as bad on Data
+Health (and not retried until one of its files changes) while every other
+session still shows. If building a page's stats still fails, `/api/stats`
+answers with a JSON error and the page says "Couldn't build the stats for" that
+tool instead of showing another tool's numbers.
+
+`/api/stats?source=claude|copilot|all` picks the tool; no `source` means Claude,
+so old bookmarks keep working. `all` builds a smaller payload that combines only
+what means the same thing in both tools (rules in
+[METRICS.md §19](METRICS.md#19-github-copilot-v15)). Adding another tool later
+means one more reader plus one row in the `SOURCES` table.
 
 Requires only Python 3.8+ — standard library, no pip installs. Chart.js is
 bundled locally (`chart.umd.min.js`), so the page makes **no external
@@ -64,7 +117,8 @@ requests at all** and works fully offline.
 - Longest prompts and most-edited files
 
 **Time ranges**: 7 / 30 / 90 days / all time, plus a custom from–to date
-picker. The selected range applies to *everything* on the Dashboard tab —
+picker. "Last N days" means today plus the N−1 calendar days before it (local
+time), the same for every tool. The selected range applies to *everything* on the Dashboard tab —
 charts, tables, and the project deep-dive — and KPI cards show a Δ vs the
 previous equal-length window.
 
@@ -141,8 +195,12 @@ every metric's confidence badge, formula and limitation.
 ```
 python ai_fluency_insights.py               # serves http://localhost:8787
 python ai_fluency_insights.py --port 9000   # different port
-python ai_fluency_insights.py --dir <path>  # custom logs location
+python ai_fluency_insights.py --dir <path>  # custom Claude logs location
 python ai_fluency_insights.py --dump        # print raw stats JSON and exit
+python ai_fluency_insights.py --dump --source copilot   # one tool's stats (claude, copilot or all)
+python ai_fluency_insights.py --copilot-root <path>     # extra VS Code user folder for Copilot logs
+python ai_fluency_insights.py --no-copilot              # ignore Copilot logs
+python ai_fluency_insights.py --setup-copilot           # turn on exact Copilot token logging (asks first)
 ```
 
 On Windows, after editing the script, `Restart-Insights.bat` stops every

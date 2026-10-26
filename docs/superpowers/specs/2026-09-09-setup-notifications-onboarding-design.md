@@ -1,7 +1,7 @@
 # Setup/onboarding path for accurate plan-usage notifications
 
 **Status:** approved for implementation planning
-**Author:** Claude (ai-fluency-insights session), with Chandan AR
+**Author:** Claude (ai-fluency-insights session), with the project owner
 **Date:** 2026-09-09
 
 ## Problem

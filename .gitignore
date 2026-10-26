@@ -14,3 +14,6 @@ DevTokenDashboard-Startup.vbs
 # Notification threshold-tracking state (local runtime data)
 .notify_state.json
 .notify_state.json.tmp
+
+# Brainstorm mockups (visual companion)
+.superpowers/

@@ -1,0 +1,1503 @@
+{
+ "active_days": 3,
+ "adoption": {
+  "active_days": 3,
+  "calendar": {
+   "cells": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    10,
+    0,
+    10,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    10,
+    -1
+   ],
+   "start": "2026-06-15"
+  },
+  "coach": [
+   {
+    "area": "craft",
+    "feature": null,
+    "how": "Review diffs and say so when output misses. Pushing back is a good sign.",
+    "severity": 75.0,
+    "title": "Review and steer more",
+    "why": "Discernment is your lowest craft score (0/100)."
+   },
+   {
+    "area": "range",
+    "feature": "memory",
+    "how": "Run /init in a project so Claude learns your conventions once, instead of every session.",
+    "severity": 68,
+    "title": "Add a CLAUDE.md",
+    "why": "You haven't tried project memory yet."
+   },
+   {
+    "area": "range",
+    "feature": "plan",
+    "how": "Press Shift+Tab to switch to plan mode and let Claude propose an approach before it touches files.",
+    "severity": 65,
+    "title": "Try plan mode",
+    "why": "You haven't tried plan mode yet."
+   }
+  ],
+  "craft": [
+   {
+    "detail": "50% of sessions shipped code; 13.3\u00d7 leverage",
+    "id": "delegation",
+    "label": "Delegation",
+    "prev": null,
+    "score": 38,
+    "tip": "Try handing Claude whole tasks (build it and check it), not just questions."
+   },
+   {
+    "detail": "100% of prompts needed no correction; 3 words on average",
+    "id": "description",
+    "label": "Description",
+    "prev": null,
+    "score": 80,
+    "tip": "Put the constraints, file paths and expected behavior in your first prompt."
+   },
+   {
+    "detail": "0 corrections and interruptions; 1 tool errors",
+    "id": "discernment",
+    "label": "Discernment",
+    "prev": null,
+    "score": 0,
+    "tip": "Review diffs and say so when output misses. Pushing back is a good sign."
+   },
+   {
+    "detail": "100% of 1 code session ran commands afterwards",
+    "id": "diligence",
+    "label": "Diligence",
+    "prev": null,
+    "score": 100,
+    "tip": "Ask Claude to run the tests or build after edits, so work gets verified."
+   }
+  ],
+  "end": "2026-10-10",
+  "funnel": [
+   {
+    "achieved": true,
+    "detail": "First active day: 2026-10-01",
+    "id": "started",
+    "label": "Started"
+   },
+   {
+    "achieved": false,
+    "detail": "Reach 2+ active days a week for 3 weeks in a row",
+    "id": "recurring",
+    "label": "Recurring"
+   },
+   {
+    "achieved": false,
+    "detail": "1 features used in the last 28 days (need 4)",
+    "id": "integrated",
+    "label": "Integrated"
+   },
+   {
+    "achieved": false,
+    "detail": "Needs 3+ sessions where Claude edited files",
+    "id": "outcome",
+    "label": "Verified outcomes"
+   }
+  ],
+  "growth": "range",
+  "habit": {
+   "active_days": 3,
+   "all_time_days": 3,
+   "best_streak": 1,
+   "prev_active_days": null,
+   "streak": 1,
+   "weeks": 4,
+   "weeks_covered": 1
+  },
+  "highlights": [
+   {
+    "kind": "new",
+    "text": "First time using run & verify (2026-10-03)"
+   }
+  ],
+  "history": [
+   {
+    "end": "2026-10-10",
+    "score": 29
+   }
+  ],
+  "impact": {
+   "code_day_pct": 33,
+   "leverage": 13.3,
+   "loc": 3,
+   "per_day": 1,
+   "prev_loc": null,
+   "sessions": 2,
+   "task_mix": {
+    "feature": 1,
+    "other": 1
+   },
+   "verified_pct": 100
+  },
+  "level": {
+   "all": [
+    {
+     "floor": 0,
+     "name": "Explorer"
+    },
+    {
+     "floor": 20,
+     "name": "Practitioner"
+    },
+    {
+     "floor": 40,
+     "name": "Power user"
+    },
+    {
+     "floor": 60,
+     "name": "Expert"
+    },
+    {
+     "floor": 75,
+     "name": "Pro"
+    },
+    {
+     "floor": 90,
+     "name": "Pro Max"
+    }
+   ],
+   "blocker": null,
+   "desc": "Claude Code is part of your regular workflow.",
+   "floor": 20,
+   "index": 1,
+   "name": "Practitioner",
+   "next_floor": 40,
+   "next_name": "Power user",
+   "to_next": 11
+  },
+  "min_days": 3,
+  "pillars": [
+   {
+    "blurb": "How regularly you show up",
+    "id": "habit",
+    "label": "Habit",
+    "prev": null,
+    "score": 25
+   },
+   {
+    "blurb": "How much of Claude Code you use",
+    "id": "range",
+    "label": "Range",
+    "prev": null,
+    "score": 13
+   },
+   {
+    "blurb": "How well you work with Claude",
+    "id": "craft",
+    "label": "Craft",
+    "prev": null,
+    "score": 55
+   },
+   {
+    "blurb": "What Claude gets done for you",
+    "id": "impact",
+    "label": "Impact",
+    "prev": null,
+    "score": 17
+   }
+  ],
+  "prev_score": null,
+  "range": {
+   "features": [
+    {
+     "desc": "A CLAUDE.md that teaches Claude your project",
+     "ever": false,
+     "first": null,
+     "id": "memory",
+     "label": "Project memory",
+     "recent": 0,
+     "tip": "Run /init in a project so Claude learns your conventions once, instead of every session."
+    },
+    {
+     "desc": "Claude runs commands, tests and builds",
+     "ever": true,
+     "first": "2026-10-03",
+     "id": "verify",
+     "label": "Run & verify",
+     "recent": 1,
+     "tip": "Ask Claude to run your tests or build after it edits, so it can check its own work."
+    },
+    {
+     "desc": "Agree on an approach before any edits",
+     "ever": false,
+     "first": null,
+     "id": "plan",
+     "label": "Plan mode",
+     "recent": 0,
+     "tip": "Press Shift+Tab to switch to plan mode and let Claude propose an approach before it touches files."
+    },
+    {
+     "desc": "Helpers that research or review in parallel",
+     "ever": false,
+     "first": null,
+     "id": "subagents",
+     "label": "Subagents",
+     "recent": 0,
+     "tip": "Say \"use a subagent to research this\" to keep your main conversation clean."
+    },
+    {
+     "desc": "Reusable workflows Claude can pick up",
+     "ever": false,
+     "first": null,
+     "id": "skills",
+     "label": "Skills",
+     "recent": 0,
+     "tip": "Package something you repeat weekly as a skill so Claude does it the same way every time."
+    },
+    {
+     "desc": "Automatic checks that run on Claude Code events",
+     "ever": false,
+     "first": null,
+     "id": "hooks",
+     "label": "Hooks",
+     "recent": 0,
+     "tip": "Add a hook in your settings to run your formatter or tests automatically after Claude edits."
+    },
+    {
+     "desc": "Claude tracks multi-step work in a checklist",
+     "ever": false,
+     "first": null,
+     "id": "tasks",
+     "label": "Task lists",
+     "recent": 0,
+     "tip": "For a big job, ask Claude to write a task list first and tick items off as it goes."
+    },
+    {
+     "desc": "MCP servers for GitHub, docs, databases...",
+     "ever": false,
+     "first": null,
+     "id": "mcp",
+     "label": "Connected tools",
+     "recent": 0,
+     "tip": "Connect a tool you already use with `claude mcp add` so Claude can work with it directly."
+    },
+    {
+     "desc": "Shortcuts like /compact, /clear, /init",
+     "ever": false,
+     "first": null,
+     "id": "slash",
+     "label": "Slash commands",
+     "recent": 0,
+     "tip": "Type / to see the shortcuts. /compact and /clear keep long sessions fast and focused."
+    },
+    {
+     "desc": "Looking up docs and errors online",
+     "ever": false,
+     "first": null,
+     "id": "web",
+     "label": "Web research",
+     "recent": 0,
+     "tip": "Ask Claude to look up the docs or an error message instead of pasting it in yourself."
+    }
+   ],
+   "sessions": 2,
+   "substantial_pct": 0,
+   "total": 10,
+   "used": 1
+  },
+  "ready": true,
+  "score": 29,
+  "start": "2026-09-13",
+  "strength": "craft",
+  "targets": {
+   "features_full": 6,
+   "loc_target": 300,
+   "substantial_actions": 10,
+   "target_days": 12
+  },
+  "weekly": [
+   {
+    "active_days": 0,
+    "loc": 0,
+    "sessions": 0,
+    "start": "2026-07-20"
+   },
+   {
+    "active_days": 0,
+    "loc": 0,
+    "sessions": 0,
+    "start": "2026-07-27"
+   },
+   {
+    "active_days": 0,
+    "loc": 0,
+    "sessions": 0,
+    "start": "2026-08-03"
+   },
+   {
+    "active_days": 0,
+    "loc": 0,
+    "sessions": 0,
+    "start": "2026-08-10"
+   },
+   {
+    "active_days": 0,
+    "loc": 0,
+    "sessions": 0,
+    "start": "2026-08-17"
+   },
+   {
+    "active_days": 0,
+    "loc": 0,
+    "sessions": 0,
+    "start": "2026-08-24"
+   },
+   {
+    "active_days": 0,
+    "loc": 0,
+    "sessions": 0,
+    "start": "2026-08-31"
+   },
+   {
+    "active_days": 0,
+    "loc": 0,
+    "sessions": 0,
+    "start": "2026-09-07"
+   },
+   {
+    "active_days": 0,
+    "loc": 0,
+    "sessions": 0,
+    "start": "2026-09-14"
+   },
+   {
+    "active_days": 0,
+    "loc": 0,
+    "sessions": 0,
+    "start": "2026-09-21"
+   },
+   {
+    "active_days": 2,
+    "loc": 3,
+    "sessions": 1,
+    "start": "2026-09-28"
+   },
+   {
+    "active_days": 1,
+    "loc": 0,
+    "sessions": 1,
+    "start": "2026-10-05"
+   }
+  ],
+  "weights": {
+   "craft": 0.3,
+   "habit": 0.25,
+   "impact": 0.2,
+   "range": 0.25
+  },
+  "wellbeing": {
+   "avg_active_min": 10,
+   "late_pct": 0,
+   "longest_focus_min": 10,
+   "weekend_pct": 60
+  },
+  "window_days": 28
+ },
+ "advisor": {
+  "end": "2026-10-10",
+  "metrics": {
+   "cache_reset_pct": 0.0,
+   "clean_pct": 67,
+   "cold_start_pct": 91.8,
+   "first_run_pass_pct": 0,
+   "per_100_loc": 0.36,
+   "recovery_pct": 0,
+   "reedit_pct": 0,
+   "stuck": 0,
+   "tests_alongside_pct": 0,
+   "verified_pct": 100
+  },
+  "more": [],
+  "ready": true,
+  "recs": [
+   {
+    "action": "Review diffs and say so when output misses. Pushing back is a good sign.",
+    "area": "craft",
+    "confidence": "derived",
+    "evidence": "Discernment is your lowest craft score (0/100).",
+    "id": "adopt_craft",
+    "rank": 1,
+    "severity": 75.0,
+    "title": "Review and steer more"
+   },
+   {
+    "action": "Run /init in a project so Claude learns your conventions once, instead of every session.",
+    "area": "range",
+    "confidence": "derived",
+    "evidence": "You haven't tried project memory yet.",
+    "id": "adopt_memory",
+    "rank": 2,
+    "severity": 68,
+    "title": "Add a CLAUDE.md"
+   },
+   {
+    "action": "Press Shift+Tab to switch to plan mode and let Claude propose an approach before it touches files.",
+    "area": "range",
+    "confidence": "derived",
+    "evidence": "You haven't tried plan mode yet.",
+    "id": "adopt_plan",
+    "rank": 3,
+    "severity": 65,
+    "title": "Try plan mode"
+   }
+  ],
+  "scores": {
+   "flow": null,
+   "quality": null
+  },
+  "start": "2026-09-13",
+  "wins": []
+ },
+ "best_streak": 1,
+ "branches": [
+  {
+   "loc": 3,
+   "msgs": 4,
+   "name": "main",
+   "output": 80
+  }
+ ],
+ "catalog": {
+  "adoption_score": {
+   "confidence": "derived",
+   "how": "25% Habit + 25% Range + 30% Craft + 20% Impact.",
+   "limit": "A heuristic blend with hand-picked weights.",
+   "name": "Adoption Score",
+   "tab": "adoption"
+  },
+  "cache_savings": {
+   "confidence": "estimated",
+   "how": "Cache reads billed at 10% instead of 100%, minus the 25% premium for cache writes, at list prices.",
+   "limit": "Assumes you would otherwise have sent the same tokens uncached.",
+   "name": "Cache savings",
+   "tab": "value"
+  },
+  "clean_turns": {
+   "confidence": "derived",
+   "how": "Turns that finished with no tool error, no interruption, and no correction from your next prompt, divided by all turns.",
+   "limit": "A correction is detected from wording at the start of your next prompt, so it can miss some.",
+   "name": "Clean first-pass turns",
+   "tab": "flow"
+  },
+  "cold_start": {
+   "confidence": "estimated",
+   "how": "Cost of each session's first call as a share of all session cost.",
+   "limit": "See METRICS.md.",
+   "name": "Cold-start tax",
+   "tab": "value"
+  },
+  "cost": {
+   "confidence": "estimated",
+   "how": "Token usage priced at the PRICING table in the script.",
+   "limit": "List prices; $0 real marginal cost on a subscription.",
+   "name": "Estimated cost",
+   "tab": "value"
+  },
+  "cost_100_loc": {
+   "confidence": "estimated",
+   "how": "Estimated cost divided by lines Claude wrote, times 100.",
+   "limit": "Lines of code are additions only.",
+   "name": "Cost per 100 lines",
+   "tab": "value"
+  },
+  "cost_spikes": {
+   "confidence": "derived",
+   "how": "Days costing 2x or more your typical day in the window.",
+   "limit": "Needs five or more active days.",
+   "name": "Cost spikes",
+   "tab": "value"
+  },
+  "cost_verified": {
+   "confidence": "estimated",
+   "how": "Estimated cost of sessions that edited and then ran a check, divided by their count.",
+   "limit": "Sessions are not tasks.",
+   "name": "Cost per verified session",
+   "tab": "value"
+  },
+  "first_edit": {
+   "confidence": "derived",
+   "how": "Seconds from a session's first log entry to Claude's first edit, median over sessions that edited.",
+   "limit": "Edits made through shell commands are not seen.",
+   "name": "Time to first edit",
+   "tab": "flow"
+  },
+  "first_run": {
+   "confidence": "derived",
+   "how": "For each session and kind of check (test, build, lint), whether the first run passed.",
+   "limit": "Pass/fail comes from the command's error flag.",
+   "name": "First-run pass rate",
+   "tab": "quality"
+  },
+  "flow_score": {
+   "confidence": "derived",
+   "how": "50% clean-turn rate + 30% failure-recovery rate + 20% (1 - stuck share); needs 5+ turns.",
+   "limit": "A heuristic blend; the trend matters more than the number.",
+   "name": "Flow score",
+   "tab": "flow"
+  },
+  "friction": {
+   "confidence": "observed",
+   "how": "Failed tool results per 100 edits, and interruptions per 100 prompts.",
+   "limit": "A failed command is often a normal step.",
+   "name": "Errors and interruptions",
+   "tab": "quality"
+  },
+  "hotspots": {
+   "confidence": "proxy",
+   "how": "Files edited 5+ times that were edited 3+ times in one session or on 3+ days.",
+   "limit": "Some files are simply central.",
+   "name": "Rework hotspots",
+   "tab": "quality"
+  },
+  "model_mix": {
+   "confidence": "derived",
+   "how": "Each model's share of estimated cost, by session.",
+   "limit": "A session's primary model is the one that cost the most.",
+   "name": "Model mix",
+   "tab": "value"
+  },
+  "perms": {
+   "confidence": "observed",
+   "how": "The decision and source recorded with each tool call, when the logs include it.",
+   "limit": "Not present in every setup.",
+   "name": "Permission decisions",
+   "tab": "quality"
+  },
+  "quality_score": {
+   "confidence": "derived",
+   "how": "40% verified + 20% tests alongside + 20% low re-edits + 20% first-run pass (when checks ran); needs 3+ edited sessions.",
+   "limit": "A heuristic blend; the trend matters more than the number.",
+   "name": "Quality score",
+   "tab": "quality"
+  },
+  "recovery": {
+   "confidence": "derived",
+   "how": "Of the times a tool failed, the share where the same tool later succeeded in that session.",
+   "limit": "A different fix that does not retry the same tool counts as unrecovered.",
+   "name": "Failure recovery",
+   "tab": "flow"
+  },
+  "reedit": {
+   "confidence": "proxy",
+   "how": "Edits to a file already edited earlier in the same session, divided by all edits.",
+   "limit": "Normal step-by-step work also re-edits files.",
+   "name": "Re-edit share",
+   "tab": "quality"
+  },
+  "safety": {
+   "confidence": "proxy",
+   "how": "Counts of risky commands (force-push, hard reset, recursive delete, pipe-to-shell, skipped hooks) and touches of secret-like files.",
+   "limit": "Pattern matching on command text; only category counts are stored.",
+   "name": "Safety signals",
+   "tab": "quality"
+  },
+  "session_len": {
+   "confidence": "derived",
+   "how": "Last entry minus first entry in a session (median, 90th percentile).",
+   "limit": "Includes idle time.",
+   "name": "Session length",
+   "tab": "flow"
+  },
+  "stuck": {
+   "confidence": "derived",
+   "how": "Failure episodes where the same tool failed three or more times in a row.",
+   "limit": "Three failures is a convention, not a law.",
+   "name": "Stuck loops",
+   "tab": "flow"
+  },
+  "tests_alongside": {
+   "confidence": "proxy",
+   "how": "Sessions that edited a test file, divided by sessions where Claude edited.",
+   "limit": "Detected from file names such as test_*, *.spec.*, tests/.",
+   "name": "Tests alongside code",
+   "tab": "quality"
+  },
+  "thinking": {
+   "confidence": "observed",
+   "how": "thinkingDurationMs reported on Claude's responses.",
+   "limit": "Only present when the logs include it.",
+   "name": "Thinking time",
+   "tab": "flow"
+  },
+  "tool_time": {
+   "confidence": "observed",
+   "how": "Time between each tool call and its result, grouped by tool or command.",
+   "limit": "Excludes the model's own thinking and generation time.",
+   "name": "Where tool time goes",
+   "tab": "flow"
+  },
+  "top_tier_nocode": {
+   "confidence": "proxy",
+   "how": "Share of top-tier-model cost spent in sessions where Claude made no edits.",
+   "limit": "Some thinking-heavy sessions legitimately need a top-tier model.",
+   "name": "Top-tier model on no-edit sessions",
+   "tab": "value"
+  },
+  "turn_time": {
+   "confidence": "derived",
+   "how": "Time from your prompt to Claude finishing its answer (stop reason end_turn); median and 90th percentile.",
+   "limit": "Includes any time spent waiting for you to approve an action.",
+   "name": "Turn time",
+   "tab": "flow"
+  },
+  "verified": {
+   "confidence": "proxy",
+   "how": "Sessions where a test, build or lint command ran after Claude's last edit, divided by sessions where Claude edited.",
+   "limit": "Running a check is not the same as the check passing.",
+   "name": "Verified after last edit",
+   "tab": "quality"
+  }
+ },
+ "days": [
+  {
+   "active_min": 10,
+   "cache_read": 2200,
+   "cache_savings": 0.0038599999999999997,
+   "cache_write": 200,
+   "corrections": 0,
+   "cost": 0.002,
+   "day": "2026-10-01",
+   "focus_max": 10,
+   "human_tokens": 5,
+   "input": 120,
+   "interruptions": 0,
+   "late_msgs": 0,
+   "loc": 3,
+   "messages": 4,
+   "output": 60,
+   "prompt_lines": 1,
+   "prompt_words": 4,
+   "prompts": 1,
+   "reads": 0,
+   "tool_errors": 0,
+   "writes": 1
+  },
+  {
+   "active_min": 10,
+   "cache_read": 1100,
+   "cache_savings": 0.00198,
+   "cache_write": 0,
+   "corrections": 0,
+   "cost": 0.001,
+   "day": "2026-10-03",
+   "focus_max": 10,
+   "human_tokens": 3,
+   "input": 40,
+   "interruptions": 0,
+   "late_msgs": 0,
+   "loc": 0,
+   "messages": 4,
+   "output": 20,
+   "prompt_lines": 1,
+   "prompt_words": 3,
+   "prompts": 1,
+   "reads": 0,
+   "tool_errors": 1,
+   "writes": 0
+  }
+ ],
+ "flow": {
+  "abandoned": 0,
+  "clean_pct": 50,
+  "corrected": 0,
+  "effort": [],
+  "episodes": 1,
+  "fail_tools": [
+   {
+    "episodes": 1,
+    "tool": "Bash"
+   }
+  ],
+  "first_edit_median_s": 5.0,
+  "first_edit_n": 1,
+  "interrupted": 0,
+  "ready": false,
+  "recover_steps_median": null,
+  "recovered": 0,
+  "recovery_pct": 0,
+  "score": null,
+  "series": [
+   {
+    "clean_pct": 100,
+    "day": "2026-10-01",
+    "median": 10.0,
+    "p90": 10.0,
+    "turns": 1
+   },
+   {
+    "clean_pct": 0,
+    "day": "2026-10-03",
+    "median": 12.0,
+    "p90": 12.0,
+    "turns": 1
+   }
+  ],
+  "session_median_min": 2880.2,
+  "session_p90_min": 2880.2,
+  "sessions": 1,
+  "steps_median": 1.0,
+  "stuck": 0,
+  "thinking_median_s": null,
+  "thinking_share_pct": null,
+  "thinking_total_s": 0,
+  "tool_share_pct": 27,
+  "tools": [
+   {
+    "calls": 1,
+    "fails": 1,
+    "family": "pytest",
+    "max_s": 5.0,
+    "median_s": 5.0,
+    "p90_s": 5.0,
+    "share_pct": 83,
+    "total_s": 5.0
+   },
+   {
+    "calls": 1,
+    "fails": 0,
+    "family": "Write",
+    "max_s": 1.0,
+    "median_s": 1.0,
+    "p90_s": 1.0,
+    "share_pct": 17,
+    "total_s": 1.0
+   }
+  ],
+  "turn_max_s": 12.0,
+  "turn_median_s": 11.0,
+  "turn_p90_s": 12.0,
+  "turns": 2,
+  "turns_done": 2,
+  "unrecovered": 1,
+  "with_errors": 1
+ },
+ "goals": {
+  "daily_loc": 500,
+  "daily_tokens": 0,
+  "weekly_tokens": 0
+ },
+ "health": {
+  "capabilities": [
+   {
+    "detail": "5 responses with token usage (0 duplicate log lines dropped)",
+    "id": "tokens",
+    "label": "Tokens and cost",
+    "status": "ok",
+    "tab": "tokens"
+   },
+   {
+    "detail": "3 turns timed from your prompt to Claude finishing",
+    "id": "turns",
+    "label": "Turn timing",
+    "status": "ok",
+    "tab": "flow"
+   },
+   {
+    "detail": "2 of 2 tool results matched to their call",
+    "id": "tooltime",
+    "label": "Tool timing",
+    "status": "ok",
+    "tab": "flow"
+   },
+   {
+    "detail": "Pass/fail comes from the error flag; exit-code text seen on 1 failed commands",
+    "id": "cmdout",
+    "label": "Command outcomes",
+    "status": "ok",
+    "tab": "quality"
+   },
+   {
+    "detail": "None in these logs, so accept/reject rates are not shown",
+    "id": "perms",
+    "label": "Permission decisions",
+    "status": "missing",
+    "tab": "quality"
+   },
+   {
+    "detail": "0 responses report thinking time",
+    "id": "thinking",
+    "label": "Thinking time",
+    "status": "missing",
+    "tab": "flow"
+   },
+   {
+    "detail": "0 responses report an effort level",
+    "id": "effort",
+    "label": "Effort level",
+    "status": "missing",
+    "tab": "flow"
+   },
+   {
+    "detail": "No subagent work seen yet",
+    "id": "subagents",
+    "label": "Subagent activity",
+    "status": "missing",
+    "tab": "adoption"
+   },
+   {
+    "detail": "No hook runs seen",
+    "id": "hooks",
+    "label": "Hooks",
+    "status": "missing",
+    "tab": "adoption"
+   },
+   {
+    "detail": "10 of 10 entries carry a timestamp",
+    "id": "time",
+    "label": "Timestamps",
+    "status": "ok",
+    "tab": "all"
+   },
+   {
+    "detail": "1 of 2 sessions have an AI title",
+    "id": "titles",
+    "label": "Session titles",
+    "status": "partial",
+    "tab": "weekly"
+   }
+  ],
+  "duplicate_lines": 0,
+  "entry_types": [
+   {
+    "n": 5,
+    "type": "user"
+   },
+   {
+    "n": 5,
+    "type": "assistant"
+   },
+   {
+    "n": 1,
+    "type": "ai-title"
+   }
+  ],
+  "entrypoints": [],
+  "limits": [
+   "Edits Claude makes through shell commands (sed, python scripts) are not counted as edits or lines of code.",
+   "Turn and tool times include any time spent waiting for you to approve an action.",
+   "The logs do not show which of Claude's output you kept, so there is no true acceptance rate unless permission decisions appear.",
+   "A session is not a task: a long session can hold several tasks, and one task can span sessions.",
+   "Cost is an estimate at public list prices; on a subscription plan your real marginal cost is $0."
+  ],
+  "parse_errors": 0,
+  "sessions": 2,
+  "versions": []
+ },
+ "heatmap": [
+  [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   4,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   4,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0
+  ]
+ ],
+ "longest_prompts": [
+  {
+   "day": "2026-10-01",
+   "lines": 1,
+   "preview": "Add a hello function",
+   "words": 4
+  },
+  {
+   "day": "2026-10-03",
+   "lines": 1,
+   "preview": "Run the tests",
+   "words": 3
+  }
+ ],
+ "models": [
+  {
+   "cache_read": 3300,
+   "cache_write": 200,
+   "cost": 0.0,
+   "input": 160,
+   "msgs": 4,
+   "name": "claude-sonnet-4-5",
+   "output": 80
+  }
+ ],
+ "permission_modes": [],
+ "projects": [
+  {
+   "cost": 0.0,
+   "days": [
+    {
+     "day": "2026-10-01",
+     "loc": 3,
+     "output": 60
+    },
+    {
+     "day": "2026-10-03",
+     "loc": 0,
+     "output": 20
+    }
+   ],
+   "files": [
+    [
+     "hello.py",
+     3
+    ]
+   ],
+   "has_instructions": false,
+   "input": 160,
+   "loc": 3,
+   "name": "demo/proj",
+   "output": 80,
+   "prompts": 2,
+   "sessions": 1
+  }
+ ],
+ "quality": {
+  "any_command_pct": 100,
+  "edited_sessions": 1,
+  "edits": 1,
+  "errors_per_100_edits": 100.0,
+  "first_run_pass_pct": 0,
+  "hotspots": [],
+  "interruptions": 0,
+  "interrupts_per_100_prompts": 0.0,
+  "permissions": [],
+  "ready": false,
+  "reedit_pct": 0,
+  "run_groups": 1,
+  "runs": {
+   "test": {
+    "fail_groups": 1,
+    "fails": 1,
+    "first_pass_pct": 0,
+    "groups": 1,
+    "kind": "test",
+    "recovered_groups": 0,
+    "runs": 1
+   }
+  },
+  "safety": {},
+  "score": null,
+  "tests_alongside_pct": 0,
+  "tool_errors": 1,
+  "verified": 1,
+  "verified_pct": 100,
+  "weekly": [
+   {
+    "edited": 1,
+    "pct": 100,
+    "start": "2026-09-28",
+    "verified": 1
+   }
+  ],
+  "with_tests": 0
+ },
+ "quiet_hours": [
+  23,
+  6
+ ],
+ "sessions_list": [
+  {
+   "bash": 1,
+   "day": "2026-10-01",
+   "id": "s1",
+   "loc": 3,
+   "min": 2880,
+   "output": 80,
+   "project": "demo/proj",
+   "prompts": 2,
+   "reads": 0,
+   "title": "Add hello function",
+   "type": "feature",
+   "writes": 1
+  }
+ ],
+ "slash": [],
+ "streak": 1,
+ "subagents": [],
+ "today": {
+  "day": "2026-10-10",
+  "loc": 0,
+  "tokens": 80
+ },
+ "tools": [
+  [
+   "Write",
+   1
+  ],
+  [
+   "Bash",
+   1
+  ]
+ ],
+ "top_files": [
+  [
+   "hello.py",
+   3
+  ]
+ ],
+ "totals": {
+  "avg_prompt_lines": 1.0,
+  "avg_prompt_words": 3.5,
+  "avg_session_min": 2880.2,
+  "cache_efficiency": 95.4,
+  "cache_read": 3300,
+  "cache_reset_pct": 0.0,
+  "cache_write": 200,
+  "cold_start_pct": 61.4,
+  "corrections": 0,
+  "cost": 0.0,
+  "delegated": 0,
+  "human_tokens": 8,
+  "input": 160,
+  "interruptions": 0,
+  "leverage": 10.0,
+  "loc": 3,
+  "messages": 8,
+  "output": 80,
+  "parse_errors": 0,
+  "prompts": 2,
+  "reads": 0,
+  "sessions": 1,
+  "tool_errors": 1,
+  "writes": 1
+ },
+ "value": {
+  "cache_reset_pct": 0.0,
+  "cache_saved_pct": 72,
+  "cache_savings": 0.01,
+  "cold_start_pct": 61.4,
+  "cost": 0.0,
+  "cost_per_verified": 0.0,
+  "daily": [
+   {
+    "cost": 0.002,
+    "day": "2026-10-01",
+    "spike": false
+   },
+   {
+    "cost": 0.001,
+    "day": "2026-10-03",
+    "spike": false
+   }
+  ],
+  "loc": 3,
+  "median_day_cost": 0.0,
+  "models": [
+   {
+    "cost": 0.0,
+    "model": "claude-sonnet-4-5",
+    "sessions": 1,
+    "share_pct": 100
+   }
+  ],
+  "per_100_loc": 0.08,
+  "ready": true,
+  "session_median_cost": 0.0,
+  "sessions": 1,
+  "spikes": [],
+  "top_tier_cost": 0.0,
+  "top_tier_nocode_pct": null,
+  "verified_sessions": 1,
+  "weekly": [
+   {
+    "cost": 0.0,
+    "loc": 3,
+    "per_100_loc": 0.08,
+    "start": "2026-09-28"
+   }
+  ]
+ },
+ "week_tokens": 160,
+ "weeks": [
+  {
+   "active_min": 20,
+   "corrections": 0,
+   "cost": 0.0,
+   "days": [
+    {
+     "day": "2026-10-01",
+     "loc": 3,
+     "output": 60,
+     "reads": 0,
+     "writes": 1
+    },
+    {
+     "day": "2026-10-03",
+     "loc": 0,
+     "output": 20,
+     "reads": 0,
+     "writes": 0
+    }
+   ],
+   "end": "2026-10-04",
+   "human_tokens": 8,
+   "input": 160,
+   "interruptions": 0,
+   "key": "2026-W40",
+   "late_msgs": 0,
+   "loc": 3,
+   "messages": 8,
+   "minutes": 2880,
+   "output": 80,
+   "prompt_words": 7,
+   "prompts": 2,
+   "reads": 0,
+   "sessions": [
+    {
+     "bash": 1,
+     "day": "2026-10-01",
+     "id": "s1",
+     "loc": 3,
+     "min": 2880,
+     "output": 80,
+     "project": "demo/proj",
+     "prompts": 2,
+     "reads": 0,
+     "title": "Add hello function",
+     "type": "feature",
+     "writes": 1
+    }
+   ],
+   "start": "2026-09-28",
+   "tool_errors": 1,
+   "writes": 1
+  },
+  {
+   "active_min": 10,
+   "corrections": 0,
+   "cost": 0.01,
+   "days": [
+    {
+     "day": "2026-10-10",
+     "loc": 0,
+     "output": 80,
+     "reads": 0,
+     "writes": 0
+    }
+   ],
+   "end": "2026-10-11",
+   "human_tokens": 4,
+   "input": 40,
+   "interruptions": 0,
+   "key": "2026-W41",
+   "late_msgs": 0,
+   "loc": 0,
+   "messages": 2,
+   "minutes": 0,
+   "output": 80,
+   "prompt_words": 3,
+   "prompts": 1,
+   "reads": 0,
+   "sessions": [
+    {
+     "bash": 0,
+     "day": "2026-10-10",
+     "id": "s2",
+     "loc": 0,
+     "min": 0,
+     "output": 80,
+     "project": "demo/proj",
+     "prompts": 1,
+     "reads": 0,
+     "title": "Untitled session",
+     "type": "other",
+     "writes": 0
+    }
+   ],
+   "start": "2026-10-05",
+   "tool_errors": 0,
+   "writes": 0
+  }
+ ]
+}
